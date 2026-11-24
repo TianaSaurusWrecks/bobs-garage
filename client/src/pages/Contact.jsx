@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 function Contact() {
     const location = useLocation();
+    const [services, setServices] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -10,6 +11,25 @@ function Contact() {
         service: location.state?.service || '',
         message: '',
     });
+
+    useEffect(() => {
+        async function fetchServices() {
+            try {
+                const response = await fetch(
+                    'http://localhost:5000/api/services'
+                );
+                if (!response.ok) {
+                    throw new Error('Failed to fetch services');
+                }
+
+                const data = await response.json();
+                setServices(data);
+            } catch (error) {
+                console.error('Error fetching services:', error);
+            }
+        }
+        fetchServices();
+    }, []);
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -56,14 +76,22 @@ function Contact() {
                 />
 
                 <label htmlFor="service">Service</label>
-                <input
-                    type="text"
+                <select
+                    
                     id="service"
                     name="service"
                     value={formData.service}
                     onChange={handleChange}
                     required
-                />
+                > 
+                <option value="">Please select a service</option>
+                {services.map((service) => (
+                    <option key={service.id} value={service.name}>
+                        {service.name}
+                    </option>
+                ))}
+                </select>
+                
 
                 <label htmlFor="message">Your Enquiry</label>
                 <textarea

@@ -52,10 +52,43 @@ router.post("/register", async (req, res) => {
             passwordHash
         );
 
+        // res.status(201).json({
+        //     message: "User registered successfully!",
+        //     userId: userId
+        // });
+
+        // retrieve the newly created user
+        const user = await userModel.findUserByEmail(email);
+
+        // create a JWT for the new user
+        const token = jwt.sign(
+            { userId: user.id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        // set the authentication cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 1000,
+            path: "/"
+        });
+
+        // return the user's details to the frontend
         res.status(201).json({
             message: "User registered successfully!",
-            userId: userId
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
         });
+
+
+
     } catch (error) {
         console.error("Error registering user:", error);
 
@@ -113,10 +146,18 @@ router.post("/login", async (req, res) => {
             }
         );
 
-        // return the token and basic user information
+        // Set the JWT in an HttpOnly cookie
+        res.cookie("token", token, {
+            httpOnly: true, // js can't read the cookie
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 1000, // expires after 1 hour
+            path: "/"
+        });
+
+        // return the user's information
         res.json({
             message: "Login successful!",
-            token: token,
             user: {
                 id: user.id,
                 name: user.name,
@@ -132,6 +173,24 @@ router.post("/login", async (req, res) => {
         });
     }
 });
+
+// POST - Log OUT the current user
+router.post("/logout", (req, res) => {
+    // clear the authentication cookie
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/"
+    });
+
+    res.json({
+        message: "Logged out successfully."
+    });
+});
+
+
+
 
 // GET - retrieve the logged-in user's profile
 router.get("/profile", authenticateToken, async (req, res) => {
@@ -171,7 +230,7 @@ router.put("/profile", authenticateToken, async (req, res) => {
         }
 
         const { name, email } = req.body;
-        
+
         const result = await userModel.updateUser(
             req.user.userId,
             name,

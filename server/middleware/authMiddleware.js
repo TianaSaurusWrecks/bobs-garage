@@ -4,19 +4,16 @@
 const jwt = require("jsonwebtoken");
 
 // check whether the request contains a valid JWT
-const authenticateToken = (req, res, next) => {
-    // get the token from the authorization header
-    const authHeader = req.headers.authorization;
+function authenticateToken(req, res, next) {
+    // get the token from the HttpOnly cookie
+    const token = req.cookies.token;
 
     // check whether a token was provided
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
         return res.status(401).json({
             message: "Authentication required."
         });
     }
-
-    // extract the token from the header
-    const token = authHeader.split(" ")[1];
 
     try {
         // verify the token using the secret key
@@ -33,6 +30,6 @@ const authenticateToken = (req, res, next) => {
             message: "Invalid or expired token."
     });
   }
-};
+}
 
 module.exports = authenticateToken;

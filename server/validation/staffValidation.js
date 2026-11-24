@@ -7,7 +7,10 @@ const staffSchema = Joi.object({
 
     bio: Joi.string().trim().allow("").optional(),
 
-    image_url: Joi.string().uri().allow(null, "").optional()
+    image_url: Joi.alternatives().try(
+            Joi.string().uri(),
+            Joi.string().pattern(/^\/images\/.+/)
+        ).allow(null, "").optional()
 });
 
 module.exports = { staffSchema };

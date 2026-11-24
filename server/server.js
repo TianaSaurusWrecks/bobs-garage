@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const db = require("./config/db"); 
+const cookieParser = require("cookie-parser");
 
 const userModel = require("./models/userModel");
 const serviceModel = require("./models/serviceModel");
@@ -10,6 +11,7 @@ const imageModel = require("./models/imageModel");
 const preferenceModel = require("./models/preferenceModel");
 
 const authenticateToken = require("./middleware/authMiddleware");
+
 
 const serviceRoutes = require("./routes/serviceRoutes");
 const staffRoutes = require("./routes/staffRoutes");
@@ -24,8 +26,12 @@ const app = express();
 
 // middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173", // frontend address
+    credentials: true // true allows browser to send cookies with requests
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 const requireAdmin = require("./middleware/adminMiddleware");
 

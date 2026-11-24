@@ -92,7 +92,42 @@ body {
   line-height: 1.2;
 }
 
-/* Hero Secrtion */
+.theme-toggle .theme-icon {
+  font-size: 20px;
+}
+
+.theme-toggle .moon-icon {
+  color: #facc15;
+}
+
+.theme-toggle .sun-icon {
+  color: #facc15;
+  font-size: 25px;
+}
+
+/* Theme toggle background */
+.theme-toggle {
+    background-color: #051e47;
+}
+
+/* White background when dark mode is active */
+.dark-mode .theme-toggle {
+    background-color: whitesmoke;
+}
+
+
+/* Theme toggle background colours */
+.navbar .theme-toggle.light-toggle {
+    background-color: #252525
+}
+
+.navbar .theme-toggle.dark-toggle {
+    background-color: #ffffff;
+}
+
+
+
+/* Hero Section */
 
 .hero {
   text-align: center;
@@ -110,9 +145,9 @@ body {
   text-decoration: none;
   padding: 12px 28px;
   border-radius: 10px;
-  font-weight: bold;
   font-family: 'Lora', serif;
   margin-bottom: 30px;
+  width: 35%;
 }
 
 .services-button:hover {
@@ -212,7 +247,7 @@ body {
   width: 100%;
   height: 550px;
   object-fit: cover;
-  border: solid 18px white;
+  /* border: solid 18px white; */
 }
 
 .hero-overlay {
@@ -276,6 +311,7 @@ body {
   font-size: 32px;
   font-weight: 500;
   margin-bottom: 10px;
+  color:#c9824f;
 }
 
 .services-heading p {
@@ -300,7 +336,8 @@ body {
   max-width: 260px;
   width: 100%;
   margin: 0 auto;
-
+  border: solid 12px white;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
 }
@@ -323,9 +360,10 @@ body {
 .service-card h2 {
   font-family: 'Lora', serif;
   font-variant: small-caps;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 400;
   margin-bottom: 8px;
+  color:#c9824f
 }
 
 .service-description {
@@ -348,7 +386,8 @@ body {
   max-width: 160px;
   border: none;
   background-color: #d9d9d9;
-  background-color:#e4bc98;
+  /* background-color:#e4bc98; */
+  background-color: #ff9b4a;
   color: #222;
   padding: 8px 12px;
   font-family: 'Lora', serif;
@@ -363,4 +402,1078 @@ body {
 .enquire-button:hover {
   background-color: #c5c5c5;
   background-color: #f0a976;
+}
+
+/* Services Page - Responsive Layout */
+
+@media (max-width: 950px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 600px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .service-card {
+    max-width: 350px;
+    width: 100%;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  .service-image {
+    display: block;
+    width: 90%;
+    height: 130px;
+    object-fit: cover;
+  }
+
+  
+}
+
+
+/* Contact Page */
+.contact-page {
+  flex: 1;
+  background-color: #f5eeee;
+  padding: 45px 20px 70px;
+}
+
+.contact-heading {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.contact-heading h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.contact-heading p {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-variant: small-caps;
+  margin: 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 35px 40px;
+  background-color: white;
+  border: 2px solid #c9bdb5;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.contact-form label {
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #bdb5af;
+  border-radius: 5px;
+  background-color: #fffdfb;
+  color: #222;
+  font-family: 'Lora', serif;
+  font-size: 15px;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  outline: 2px solid #e7b185;
+  border-color: #c9824f;
+}
+
+.contact-form .enquire-button {
+  margin-top: 10px;
+  margin-bottom: 0;
+  max-width: 100%;
+  padding: 12px 20px;
+  font-size: 15px;
+}
+
+/* Contact Page Responsivenee */
+@media (max-width: 600px) {
+  .contact-page {
+    padding: 35px 15px 50px;
+  }
+
+  .contact-heading h1 {
+    font-size: 30px;
+  }
+
+  .contact-form {
+    padding: 25px 20px;
+  }
+}
+
+
+/* About Page */
+.about-page {
+  flex: 1;
+  background-color: #f5eeee;
+  padding: 45px 25px 70px;
+}
+
+/* Workshop image */
+.about-workshop {
+  max-width: 720px;
+  margin: 0 auto 60px;
+}
+
+.about-workshop-image {
+  display: block;
+  width: 100%;
+  height: 490px;
+  object-fit: cover;
+  border: solid 18px white;
+}
+
+/* About Intro */
+.about-intro {
+  max-width: 800px;
+  margin: 35px auto 0;
+  text-align: center;
+}
+
+.about-intro h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color:#c9824f
+}
+
+.about-intro p {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.about-intro p:first-of-type {
+  font-variant: small-caps;
+  font-size: 18px;
+}
+
+/* Meet our team */
+.about-team {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.about-team-heading {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.about-team-heading h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color:#c9824f;
+}
+
+.about-team-heading p {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-variant: small-caps;
+  margin: 0;
+}
+
+/* Staff Cards */
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.staff-card {
+  background-color: white;
+  border: 1px solid #888;
+  text-align: center;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+  
+  border: solid 10px white;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.staff-image {
+  display: block;
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  /* border: 2px solid #c9824f; */
+  border-radius: 5px;
+  
+}
+
+.staff-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  background-color:#e7b185;
+  font-family: 'Playfair Display', serif;
+  font-size: 60px;
+  color: #222;
+}
+
+.staff-card-content {
+  padding: 18px 15px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.staff-card h3 {
+  font-family: 'Lora', serif;
+  font-variant: small-caps;
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.staff-job-title {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  color: #c9824f;
+  margin-bottom: 12px;
+}
+
+.staff-bio {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* About page responsive layout */
+
+@media (max-width: 950px) {
+  .staff-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .about-workshop-image {
+    height: 350px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-page {
+    padding: 35px 15px 50px;
+  }
+
+  .about-workshop-image {
+    height: 250px;
+    border-width: 8px;
+  }
+
+  .about-intro h1 {
+    font-size: 30px;
+  }
+
+  .about-intro p {
+    font-size: 15px;
+  }
+
+  .about-team-heading h2 {
+    font-size: 26px;
+  }
+
+  .staff-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+
+
+/* Login Page */
+.login-page {
+  flex: 1;
+  background-color: #f5eeee;
+  padding: 45px 20px 70px;
+}
+
+.login-heading {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.login-heading h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.login-heading p {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-variant: small-caps;
+  margin: 0;
+}
+
+/* Login Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 35px 40px;
+  background-color: white;
+  border: 1px solid #c9bdb5;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Lora', serif;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 22px;
+  border: 1px solid #bdb5af;
+  border-radius: 5px;
+  background-color: #fffdfb;
+  color: #222;
+  font-family: 'Lora', serif;
+  font-size: 15px;
+}
+
+.login-form input:focus {
+  outline: 2px solid #e7b185;
+  border-color: #c9824f;
+}
+
+/* Login Button */
+.login-form .login-button {
+  margin-top: 10px;
+  padding: 12px 20px;
+  background-color: #ff9b4a;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.login-form .login-button:hover {
+  background-color: #f0802e;
+}
+
+/* Login Messages */
+.login-message {
+  text-align: center;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+/* register Link */
+.register-link {
+  text-align: center;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  margin-top: 25px;
+  margin-bottom: 0;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Login Page */
+
+@media (max-width: 600px) {
+  .login-page {
+    padding: 35px 15px 50px;
+  }
+
+  .login-heading h1 {
+    font-size: 30px;
+  }
+
+  .login-heading p {
+    font-size: 16px;
+  }
+
+  .login-form {
+    padding: 25px 20px;
+  }
+}
+
+/* Register */
+
+.password-hint {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #666;
+  margin-top: -10px;
+  margin-bottom: 22px;
+}
+
+
+/* Admin Dashboard Layout */
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  background: #f5f4f4;
+  
+}
+
+/* welcome banner */
+.admin-welcome {
+  width: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  padding: 3rem;
+  box-sizing: border-box;
+  background:
+      linear-gradient(
+          90deg,
+            rgba(37, 37, 37, 0.85),
+            rgba(37, 37, 37, 0.25)
+      ),
+      url('/images/dashboard-jahanzeb-ahsan-unsplash.jpg') center / cover no-repeat;
+
+    color: #fff;
+    margin-bottom: 10px;
+    margin-top: 8px;
+    
+}
+.admin-welcome h1 {
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    margin-bottom: 0.8rem;
+}
+
+.admin-welcome h2 {
+    font-size: 1.3rem;
+    font-family: 'Playfair Display', serif;
+    margin: 0;
+}
+
+/* sidebar and main content */
+.admin-layout {
+  display: flex;
+  flex: 1;
+  min-height: 600px;
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 290px;
+  flex-shrink: 0;
+  background: #727171;
+  color: #fff;
+  padding: 2rem 1.5rem;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  border-radius: 10px;
+}
+
+.admin-sidebar h2 {
+    font-family: 'Playfair Display', serif;
+    color: #e7b185;
+    margin-bottom: 2rem;
+    font-size: 26px;
+    text-align: center;
+    
+}
+
+.admin-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.admin-sidebar nav button {
+  background: transparent;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.admin-sidebar nav button:hover {
+    background: #7c7a7a;
+    color: #e7b185;
+}
+
+/* Main content */
+.admin-main {
+  flex: 1;
+  padding: 2.5rem;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.admin-main h1 {
+    font-family: 'Playfair Display', serif;
+    color: #252525;
+  }
+
+.admin-main h2,
+.admin-main h3 {
+    font-family: 'Lora', serif;
+    color: #252525;
+}
+
+
+
+/* Dashboard Sections */
+.admin-stats,
+.admin-management,
+.admin-section {
+    margin-bottom: 2.5rem;
+    /* background: #fcf9f6; */
+    padding: 1.5rem;
+}
+
+.admin-stats h3,
+.admin-management h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+/* Responsive Layout */
+@media (max-width: 850px) {
+    .admin-dashboard {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 50%;
+        padding: 1.5rem;
+    }
+
+    .admin-sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin-main {
+        padding: 1.5rem;
+    }
+
+}
+
+@media (max-width: 550px) {
+    .admin-welcome {
+        padding: 1.5rem;
+        min-height: 180px;
+    }
+
+    .admin-welcome h1 {
+        font-size: 1.8rem;
+    }
+}
+
+
+
+/* =========================================
+   ADD STAFF BUTTON
+========================================= */
+
+.admin-add-button {
+    background: #e7b185;
+    color: #252525;
+    border: none;
+    padding: 0.8rem 1.3rem;
+    border-radius: 6px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-top: 1rem;
+}
+
+.admin-add-button:hover {
+    background: #d49a6d;
+}
+
+
+/* =========================================
+   STAFF FORM
+========================================= */
+
+.admin-staff-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 650px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.admin-staff-form h3 {
+    margin-bottom: 1.5rem;
+}
+
+.admin-staff-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.admin-staff-form input,
+.admin-staff-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+}
+
+.admin-staff-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+
+/* =========================================
+   SAVE AND CANCEL BUTTONS
+========================================= */
+
+.admin-save-button,
+.admin-cancel-button {
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    transition: background 0.2s ease;
+}
+
+.admin-save-button {
+    background: #e7b185;
+    color: #252525;
+}
+
+.admin-save-button:hover {
+    background: #d49a6d;
+}
+
+.admin-save-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-cancel-button {
+    background: #ddd;
+    color: #252525;
+    margin-left: 0.8rem;
+}
+
+.admin-cancel-button:hover {
+    background: #ccc;
+}
+
+
+/* =========================================
+   STAFF SUCCESS AND ERROR MESSAGES
+========================================= */
+
+.admin-form-error {
+    color: #b00020;
+    margin-bottom: 1rem;
+}
+
+.admin-form-success {
+    color: #26743b;
+    margin: 1rem 0;
+}
+
+
+/* =========================================
+   STAFF GRID
+========================================= */
+
+.admin-staff-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+
+/* =========================================
+   STAFF CARD
+   Compact horizontal layout
+========================================= */
+
+.admin-staff-card {
+    display: flex;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Small dashboard staff photos */
+.admin-staff-card img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+    margin-right: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+
+/* Staff details */
+.admin-staff-card-content {
+    padding: 1rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-staff-card-content h3 {
+    margin-bottom: 0.5rem;
+}
+
+.admin-staff-card-content p {
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.admin-staff-card .staff-job-title {
+    color: #b87845;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+
+/* Staff image placeholder */
+.admin-staff-placeholder {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    color: #666;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+
+/* =========================================
+   STAFF EDIT AND DELETE BUTTONS
+========================================= */
+
+.admin-staff-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+}
+
+.admin-edit-button,
+.admin-delete-button {
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    transition: background 0.2s ease;
+}
+
+.admin-edit-button {
+    background: #e7b185;
+    color: #252525;
+}
+
+.admin-edit-button:hover {
+    background: #d49a6d;
+}
+
+.admin-delete-button {
+    background: #252525;
+    color: #fff;
+}
+
+.admin-delete-button:hover {
+    background: #444;
+}
+
+
+/* =========================================
+   RESPONSIVE DASHBOARD
+========================================= */
+
+@media (max-width: 850px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .admin-sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin-main {
+        padding: 1.5rem;
+    }
+}
+
+
+/* =========================================
+   RESPONSIVE STAFF CARDS
+========================================= */
+
+@media (max-width: 600px) {
+    .admin-staff-card {
+        flex-direction: column;
+    }
+
+    .admin-staff-card img,
+    .admin-staff-placeholder {
+        width: 100%;
+        height: 150px;
+    }
+
+    .admin-staff-card-content {
+        width: 100%;
+    }
+}
+
+
+/* =========================================
+   RESPONSIVE WELCOME BANNER
+========================================= */
+
+@media (max-width: 550px) {
+    .admin-welcome {
+        padding: 1.5rem;
+        min-height: 180px;
+    }
+
+    .admin-welcome h1 {
+        font-size: 1.8rem;
+    }
+}
+
+
+/* Admin Services */
+
+.admin-service-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.admin-service-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #e8dddd;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.admin-service-card img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.admin-service-card-content {
+  min-width: 0;
+}
+
+.admin-service-card-content h3 {
+  margin: 0 0 8px;
+  color: #252525;
+  font-size: 1.1rem;
+}
+
+.admin-service-card-content p {
+  margin: 0 0 8px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.admin-service-price {
+  font-weight: bold;
+  color: #c66b2e;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+  .admin-service-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-service-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-service-card img {
+    width: 100%;
+    height: 160px;
+  }
+}
+
+.admin-service-card .admin-staff-actions {
+  margin-top: 12px;
+}
+
+
+
+
+/* Dark Mode */
+.public-content {
+  flex: 1;
+}
+/* Dark Mode backgrounds and text */
+.public-content.dark-mode {
+  background-color: #252525;
+  color: #f5eeee;
+}
+
+/* public page backgrounds */
+.public-content.dark-mode .hero,
+.public-content.dark-mode .services-page,
+.public-content.dark-mode .contact-page,
+.public-content.dark-mode .about-page,
+.public-content.dark-mode .login-page,
+.public-content.dark-mode .register-page {
+    background-color: #252525;
+    color: #f5eeee;
+}
+
+.public-content.dark-mode .hero-img {
+  border: solid 18px #252525;
+}
+
+/* Keep text readable inside existing light cards and forms */
+.public-content.dark-mode .service-card,
+.public-content.dark-mode .staff-card,
+.public-content.dark-mode .contact-form,
+.public-content.dark-mode .login-form {
+    color: #222;
+}
+
+
+.favourite-button {
+  display: block;
+  margin: 10px auto o;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: #ec4899;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.favourite-button:hover {
+  transform: scale(1.1);
+}
+
+.favourite-button:focus-visible {
+  outline: 2px solid #ec4899;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.dashboard-stat-card {
+  padding: 24px;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.dashboard-stat-card h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.dashboard-stat-card p {
+  margin: 0;
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #e7b185;
 }

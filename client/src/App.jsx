@@ -1,10 +1,18 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
+
+
 import Services from './pages/Services';
 import Contact from './pages/Contact';
+import About from './pages/About';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import AdminDashboard from './pages/AdminDashboard';
 
-
+import AdminRoute from './components/AdminRoute';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
 import './App.css';
 
 function Home() {
@@ -38,15 +46,35 @@ function Home() {
 }
 
 function App() {
+    const { darkMode } = useAuth();
+
   return (
     <BrowserRouter>
       <div className="app">
         <Navbar />
 
+        {/* public pages */}
+        <div className={`public-content ${darkMode ? 'dark-mode' : ''}`}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+
+        {/* admin */}
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route 
+            path="/admin" 
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
         </Routes>
 
         <Footer />

@@ -49,7 +49,6 @@ router.get("/:id", async (req, res) => {
 // POST - Create a new image record
 router.post("/", authenticateToken, requireAdmin, async (req, res) => {
     try {
-        console.error("Error updating image record:", error);
 
         // validate the request body
         const { error } = imageSchema.validate(req.body);
