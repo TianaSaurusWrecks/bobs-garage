@@ -27,7 +27,10 @@ const app = express();
 // middleware
 app.use(helmet());
 app.use(cors({
-    origin: "http://localhost:5173", // frontend address
+    origin: [ 
+        "http://localhost:5173", 
+        "https://bobs-garage-eight.vercel.app"
+    ],
     credentials: true // true allows browser to send cookies with requests
 }));
 app.use(express.json());
