@@ -29,7 +29,7 @@ app.use(helmet());
 app.use(cors({
     origin: [ 
         "http://localhost:5173", 
-        "https://bobs-garage-eight.vercel.app"
+        "https://bobs-garage-client-five.vercel.app"
     ],
     credentials: true // true allows browser to send cookies with requests
 }));
