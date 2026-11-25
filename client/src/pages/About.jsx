@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import API_URL from "../config/api";
 
 function About() {
     const [staff, setStaff] = useState([]);
@@ -9,7 +10,7 @@ function About() {
         async function fetchStaff() {
             try {
                 const response = await fetch(
-                    'http://localhost:5000/api/staff'
+                    `${API_URL}/api/staff`
                 );
 
                 if (!response.ok) {

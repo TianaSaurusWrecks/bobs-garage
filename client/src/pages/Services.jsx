@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import API_URL from "../config/api";
 
 function Services() {
     const [services, setServices] = useState([]);
@@ -16,7 +17,7 @@ function Services() {
     useEffect(() => {
         async function fetchServices() {
             try {
-                const response = await fetch('http://localhost:5000/api/services');
+                const response = await fetch(`${API_URL}/api/services`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch services');
@@ -44,7 +45,7 @@ function Services() {
 
             try {
                 const response = await fetch(
-                    'http://localhost:5000/api/favourites',
+                    `${API_URL}/api/favourites`,
                     {
                         credentials: 'include',
                     }
@@ -84,7 +85,7 @@ function Services() {
 
             if (isFavourite) {
                 response = await fetch(
-                    `http://localhost:5000/api/favourites/${serviceId}`,
+                    `${API_URL}/api/favourites/${serviceId}`,
                     {
                         method: 'DELETE',
                         credentials: 'include',
@@ -92,7 +93,7 @@ function Services() {
                 );
             } else {
                 response = await fetch(
-                    'http://localhost:5000/api/favourites',
+                    `${API_URL}/api/favourites`,
                     {
                         method: 'POST',
                         credentials: 'include',

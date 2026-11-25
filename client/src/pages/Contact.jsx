@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import API_URL from "../config/api";
 
 function Contact() {
     const location = useLocation();
@@ -16,7 +17,7 @@ function Contact() {
         async function fetchServices() {
             try {
                 const response = await fetch(
-                    'http://localhost:5000/api/services'
+                    `${API_URL}/api/services`
                 );
                 if (!response.ok) {
                     throw new Error('Failed to fetch services');

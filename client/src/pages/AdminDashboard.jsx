@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import API_URL from "../config/api";
 
 function AdminDashboard() {
     const { user } = useAuth();
@@ -38,7 +39,7 @@ function AdminDashboard() {
             setServicesError('');
 
             const response = await fetch(
-                'http://localhost:5000/api/services',
+                `${API_URL}/api/services`,
                 {
                     credentials: 'include'
                 }
@@ -128,8 +129,8 @@ function AdminDashboard() {
         const isEditing = editingServiceId !== null;
 
         const url = isEditing
-            ? `http://localhost:5000/api/services/${editingServiceId}`
-            : 'http://localhost:5000/api/services';
+            ? `${API_URL}/api/services/${editingServiceId}`
+            : `${API_URL}/api/services`;
 
         const method = isEditing ? 'PUT' : 'POST';
 
@@ -190,7 +191,7 @@ function AdminDashboard() {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/services/${service.id}`,
+                `${API_URL}/api/services/${service.id}`,
                 {
                     method: 'DELETE',
                     credentials: 'include'
@@ -238,7 +239,7 @@ function AdminDashboard() {
     async function fetchStaff() {
         try {
             const response = await fetch(
-                'http://localhost:5000/api/staff',
+                `${API_URL}/api/staff`,
                 {
                     credentials: 'include'
                 }
@@ -352,8 +353,8 @@ useEffect(() => {
         const isEditing = editingStaffId !== null;
 
         const url = isEditing
-            ? `http://localhost:5000/api/staff/${editingStaffId}`
-            : 'http://localhost:5000/api/staff';
+            ? `${API_URL}/api/staff/${editingStaffId}`
+            : `${API_URL}/api/staff`;
 
         const method = isEditing ? 'PUT' : 'POST';
 
@@ -414,7 +415,7 @@ useEffect(() => {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/staff/${staff.id}`,
+                `${API_URL}/api/staff/${staff.id}`,
                 {
                     method: 'DELETE',
                     credentials: 'include'
