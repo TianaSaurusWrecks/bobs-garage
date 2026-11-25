@@ -150,7 +150,7 @@ router.post("/login", async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true, // js can't read the cookie
             secure: process.env.NODE_ENV === "production",
-            sameSite: process.envNODE_ENV === "production" ? "none" : "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 60 * 60 * 1000, // expires after 1 hour
             path: "/"
         });
