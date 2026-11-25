@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Outlet } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 
 
@@ -8,6 +8,7 @@ import About from './pages/About';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
+import NotFound from './pages/NotFound';
 
 import AdminRoute from './components/AdminRoute';
 import Navbar from './components/Navbar';
@@ -53,28 +54,35 @@ function App() {
       <div className="app">
         <Navbar />
 
-        {/* public pages */}
-        <div className={`public-content ${darkMode ? 'dark-mode' : ''}`}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </div>
-
-        {/* admin */}
         <Routes>
-          <Route 
-            path="/admin" 
-              element={
-                <AdminRoute>
-                  <AdminDashboard />
-                </AdminRoute>
-              }
-            />
+
+          {/* public pages */}
+          <Route
+            element={
+                <div className={`public-content ${darkMode ? 'dark-mode' : ''}`}>
+                  <Outlet />
+                </div>
+            }
+          >                   
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<NotFound />} />
+              
+          </Route>
+
+          {/* admin */}       
+            <Route 
+              path="/admin" 
+                element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                }
+              />
         </Routes>
 
         <Footer />
