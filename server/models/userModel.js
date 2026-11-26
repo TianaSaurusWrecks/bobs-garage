@@ -48,6 +48,18 @@ const updateUser = async (id, name, email) => {
 };
 
 
+// update a user's details and role (ADMIN ONLY)
+const updateUserByAdmin = async (id, name, email, role) => {
+    const [result] = await db.query(
+        "UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?",
+        [name, email, role, id]
+    );
+
+    return result.affectedRows;
+};
+
+
+
 
 // delete a user by id
 const deleteUser = async (id) => {
@@ -100,5 +112,6 @@ module.exports = {
     createUser,
     getAllUsers,
     updateUser,
+    updateUserByAdmin,
     deleteUser
 };

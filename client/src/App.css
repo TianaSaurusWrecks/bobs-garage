@@ -1579,6 +1579,29 @@ body {
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-  
-    
+}
+
+
+
+.admin-image-preview img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+
+.current-image-preview {
+  margin: 1rem 0;
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  .current-image-preview-img {
+    width: 250px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+  }
 }

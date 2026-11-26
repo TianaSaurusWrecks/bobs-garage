@@ -47,10 +47,21 @@ const deleteStaff = async (id) => {
     return result.affectedRows;
 };
 
+// Check whether a staff member is using an image URL
+const isImageUsedByStaff = async (imageUrl) => {
+    const [rows] = await db.query(
+        "SELECT id FROM staff WHERE image_url = ? LIMIT 1",
+        [imageUrl]
+    );
+
+    return rows.length > 0;
+};
+
 module.exports = {
     getAllStaff,
     getStaffById,
     createStaff,
     updateStaff,
-    deleteStaff
+    deleteStaff,
+    isImageUsedByStaff
 };

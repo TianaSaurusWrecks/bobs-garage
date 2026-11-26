@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect  } from 'react';
 import { useAuth } from '../context/AuthContext';
 import API_URL from "../config/api";
 
@@ -25,6 +25,37 @@ function AdminDashboard() {
         image_url: ''
     });
 
+    // Service image upload
+
+    
+
+    const [imageDeleteError, setImageDeleteError] = useState('');
+    const [imageDeleteSuccess, setImageDeleteSuccess] = useState('');
+
+    const imageLibraryRef = useRef(null);
+    const imageDeleteErrorRef = useRef(null);
+
+   useEffect(() => {
+    if (imageDeleteSuccess && imageLibraryRef.current) {
+        imageLibraryRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    if (imageDeleteError && imageDeleteErrorRef.current) {
+        imageDeleteErrorRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
+    }, [imageDeleteSuccess, imageDeleteError]);
+    
+    const [isUploadingServiceImage, setIsUploadingServiceImage] = useState(false);
+    const [serviceImageUploadError, setServiceImageUploadError] = useState('');
+
+    const serviceImageInputRef = useRef(null);
+
     const [showServiceForm, setShowServiceForm] = useState(false);
     const [editingServiceId, setEditingServiceId] = useState(null);
 
@@ -32,6 +63,8 @@ function AdminDashboard() {
     const [serviceError, setServiceError] = useState('');
     const [serviceSuccess, setServiceSuccess] = useState('');
     const [isSavingService, setIsSavingService] = useState(false);
+
+   
 
     // fetch services
     async function fetchServices() {
@@ -176,6 +209,129 @@ function AdminDashboard() {
         }
     }
 
+
+    // Upload service image
+    async function handleUploadServiceImage(file) {
+        setServiceImageUploadError('');
+
+        if (!file) {
+            setServiceImageUploadError(
+                'Please select an image to upload.'
+            );
+            return;
+        }
+
+        if (!serviceForm.name.trim()) {
+            setServiceImageUploadError(
+                'Please enter the service name first.'
+            );
+            return;
+        }
+
+        setIsUploadingServiceImage(true);
+
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('alt_text', serviceForm.name.trim());
+
+        try {
+            const response = await fetch(
+                `${API_URL}/api/images/upload`,
+                {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                }
+            );
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                setServiceImageUploadError(
+                    data.message || 'Unable to upload image.'
+                );
+                return;
+            }
+
+            // Put the uploaded image URL into the service form
+            setServiceForm((previousForm) => ({
+                ...previousForm,
+                image_url: data.image_url
+            }));
+
+            
+
+        } catch (error) {
+            console.error('Error uploading service image:', error);
+
+            setServiceImageUploadError(
+                'Unable to connect to the server. Please check your connection and try uploading the image again.'
+            );
+        } finally {
+            setIsUploadingServiceImage(false);
+        }
+    }
+
+
+
+    // Upload staff image
+    async function handleUploadStaffImage(file) {
+        setStaffImageUploadError('');
+
+        if (!file) {
+            setStaffImageUploadError('Please select an image to upload.');
+            return;
+        }
+
+        if (!staffForm.name.trim()) {
+            setStaffImageUploadError('Please enter the staff member\'s name first.');
+            return;
+        }
+
+        setIsUploadingStaffImage(true);
+
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('alt_text', staffForm.name.trim());
+
+        try {
+            const response = await fetch(
+                `${API_URL}/api/images/upload`,
+                {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                }
+            );
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                setStaffImageUploadError(
+                    data.message || 'Unable to upload image.'
+                );
+                return;
+            }
+
+            // Add the uploaded image URL to the staff form
+            setStaffForm(previousForm => ({
+                ...previousForm,
+                image_url: data.image_url
+            }));
+
+        } catch (error) {
+            console.error('Error uploading staff image:', error);
+
+            setStaffImageUploadError(
+                'Unable to connect to the server. Please check your connection and try uploading the image again.'
+            );
+        } finally {
+            setIsUploadingStaffImage(false);
+        }
+    }
+
+
+
     // Delete service
     async function handleDeleteService(service) {
         const confirmed = window.confirm(
@@ -216,6 +372,131 @@ function AdminDashboard() {
         }
     }
 
+
+    // Users data
+const [userList, setUserList] = useState([]);
+const [usersLoading, setUsersLoading] = useState(false);
+const [usersError, setUsersError] = useState('');
+
+// Edit user
+const [editingUserId, setEditingUserId] = useState(null);
+
+const [userForm, setUserForm] = useState({
+    name: '',
+    email: '',
+    role: 'customer'
+});
+
+const handleEditUser = (userToEdit) => {
+    setEditingUserId(userToEdit.id);
+
+    setUserForm({
+        name: userToEdit.name || '',
+        email: userToEdit.email || '',
+        role: userToEdit.role || 'customer'
+    });
+};
+
+
+const handleSaveUser = async (event) => {
+    event.preventDefault();
+
+    try {
+        const response = await fetch(
+            `${API_URL}/api/users/${editingUserId}`,
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userForm)
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+            window.alert('Your session has expired. Please log in again.');
+            return;
+        }
+
+        if (!response.ok) {
+            window.alert(data.message || 'Failed to update user.');
+            return;
+        }
+
+        // Update the user in the table
+        setUserList((currentUsers) =>
+            currentUsers.map((user) =>
+                user.id === editingUserId
+                    ? { ...user, ...userForm }
+                    : user
+            )
+        );
+
+        setEditingUserId(null);
+
+        window.alert('User updated successfully!');
+    } catch (error) {
+        console.error('Error updating user:', error);
+        window.alert('Something went wrong while updating the user.');
+    }
+};
+
+
+const handleDeleteUser = async (userToDelete) => {
+    // Prevent deleting your own admin account
+    if (String(userToDelete.id) === String(user.id)) {
+        window.alert('You cannot delete your own account.');
+        return;
+    }
+
+    const confirmed = window.confirm(
+        `Are you sure you want to delete ${userToDelete.name}?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `${API_URL}/api/users/${userToDelete.id}`,
+            {
+                method: 'DELETE',
+                credentials: 'include'
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+            window.alert('Your session has expired. Please log in again.');
+            return;
+        }
+
+        if (!response.ok) {
+            window.alert(data.message || 'Failed to delete user.');
+            return;
+        }
+
+        // Remove the deleted user from the table
+        setUserList((currentUsers) =>
+            currentUsers.filter(
+                (user) => user.id !== userToDelete.id
+            )
+        );
+
+        window.alert('User deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        window.alert('Something went wrong while deleting the user.');
+    }
+};
+
+
+
     ////////////////////////////////////////////////////////////
     // staff data
     const [staffList, setStaffList] = useState([]);
@@ -233,6 +514,34 @@ function AdminDashboard() {
     // Messages
     const [staffError, setStaffError] = useState('');
     const [staffSuccess, setStaffSuccess] = useState('');
+
+    // Staff image upload state
+
+    const [isUploadingStaffImage, setIsUploadingStaffImage] = useState(false);
+    const [staffImageUploadError, setStaffImageUploadError] = useState('');
+    const staffImageInputRef = useRef(null);
+    const galleryImageInputRef = useRef(null);
+    const aboutImageInputRef = useRef(null);
+
+    // Image upload state
+    const [imageFile, setImageFile] = useState(null);
+    const [imageAltText, setImageAltText] = useState('');
+    const [imageType, setImageType] = useState('gallery');
+
+
+    const [imageList, setImageList] = useState([]);
+    const [imagesLoading, setImagesLoading] = useState(false);
+    const [imagesLoadError, setImagesLoadError] = useState('');
+
+
+    const [imageError, setImageError] = useState('');
+    const [imageSuccess, setImageSuccess] = useState('');
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+   
+
+    const imageFileInputRef = useRef(null);
+
     const [isSaving, setIsSaving] = useState(false);
 
     // Fetch staff members
@@ -260,6 +569,38 @@ function AdminDashboard() {
         }
     }
 
+    // Fetch users
+    const fetchUsers = async () => {
+        setUsersLoading(true);
+        setUsersError('');
+
+        try {
+            const response = await fetch(`${API_URL}/api/users`, {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.alert(
+                        'Your session has expired. Please log in again.'
+                    );
+                    return;
+                }
+
+                throw new Error(data.message || 'Failed to fetch users');
+            }
+
+            setUserList(Array.isArray(data) ? data : data.users || []);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            setUsersError('Unable to load users.');
+        } finally {
+            setUsersLoading(false);
+        }
+    };
+
     // Load staff when dashboard opens
     useEffect(() => {
         Promise.resolve().then(() => {
@@ -279,14 +620,14 @@ function AdminDashboard() {
     }, [showStaffForm, activeSection]);
 
     // Scroll to the service form when it opens
-useEffect(() => {
-    if (showServiceForm && activeSection === 'services') {
-        serviceFormRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    }
-}, [showServiceForm, activeSection, editingServiceId]);
+    useEffect(() => {
+        if (showServiceForm && activeSection === 'services') {
+            serviceFormRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }, [showServiceForm, activeSection, editingServiceId]);
 
     // Handle form input changes
     function handleStaffInputChange(event) {
@@ -297,6 +638,19 @@ useEffect(() => {
             [name]: value
         });
     }
+
+
+    // Handle staff image selection
+    function handleStaffImageChange(event) {
+        const file = event.target.files[0] || null;
+
+        setStaffImageUploadError('');
+
+        if (file) {
+            handleUploadStaffImage(file);
+        }
+    }
+
 
     // Reset staff form
     function resetStaffForm() {
@@ -442,6 +796,168 @@ useEffect(() => {
     }
 
 
+
+    // Fetch images from the database
+    async function fetchImages() {
+        setImagesLoading(true);
+        setImagesLoadError('');
+
+        try {
+            const response = await fetch(
+                `${API_URL}/api/images`,
+                {
+                    credentials: 'include'
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Unable to retrieve images.');
+            }
+
+            const data = await response.json();
+
+            setImageList(
+                Array.isArray(data) ? data : data.images || []
+            );
+        } catch (error) {
+            console.error('Error fetching images:', error);
+            setImagesLoadError('Unable to load images.');
+        } finally {
+            setImagesLoading(false);
+        }
+    }
+
+
+    // Upload image
+    async function handleUploadImage(event, imageType = 'gallery') {
+        event.preventDefault();
+
+        setImageError('');
+        setImageSuccess('');
+
+        if (!imageFile) {
+            setImageError('Please select an image to upload.');
+            return;
+        }
+
+        if (!imageAltText.trim()) {
+            setImageError('Please enter image alt text.');
+            return;
+        }
+
+        setIsUploadingImage(true);
+
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        formData.append('alt_text', imageAltText.trim());
+        formData.append('image_type', imageType);
+
+        try {
+            const response = await fetch(
+                `${API_URL}/api/images/upload`,
+                {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                }
+            );
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                setImageError(
+                    data.message || 'Unable to upload image.'
+                );
+                return;
+            }
+
+            
+
+            setImageFile(null);
+
+            if (imageFileInputRef.current) {
+                imageFileInputRef.current.value = '';
+            }
+
+            if (aboutImageInputRef.current) {
+                aboutImageInputRef.current.value = '';
+            }
+
+            if (galleryImageInputRef.current) {
+                galleryImageInputRef.current.value = '';
+            }
+
+            setImageAltText('');
+
+            setImageSuccess('Image uploaded successfully!');
+
+            await fetchImages();
+
+           
+
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            setImageError('Unable to connect to the server.');
+        } finally {
+            setIsUploadingImage(false);
+        }
+    }
+
+
+
+    async function handleDeleteImage(image) {
+        const confirmed = window.confirm(
+            `Are you sure you want to delete "${image.filename}"?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setImageDeleteError('');
+        setImageDeleteSuccess('');
+
+        try {
+            const response = await fetch(
+                `${API_URL}/api/images/${image.id}`,
+                {
+                    method: 'DELETE',
+                    credentials: 'include'
+                }
+            );
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                if (
+                    response.status === 401 ||
+                    data.message?.toLowerCase().includes('authentication required')
+                ) {
+                    window.alert(
+                        'Your session has expired. Please log in again.'
+                    );
+                    return;
+                }
+
+                setImageDeleteError(data.message || 'Unable to delete image.');
+                return;
+            }
+
+            await fetchImages();
+            setImageDeleteSuccess('Image deleted successfully!');
+
+
+            
+            
+
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            setImageDeleteError('Unable to connect to the server.');
+        }
+    }
+
+
+
     return (
 
         <main className="admin-dashboard">
@@ -487,9 +1003,12 @@ useEffect(() => {
 
                          <button
                             className={activeSection === 'users' ? 'active' : ''}
-                            onClick={() => setActiveSection('users')}
+                            onClick={() => {
+                                setActiveSection('users');
+                                fetchUsers();
+                            }}
                         >
-                            Manage Customers
+                            Manage Users
                         </button>
 
                         <button
@@ -595,6 +1114,7 @@ useEffect(() => {
                                         name="description"
                                         value={serviceForm.description}
                                         onChange={handleServiceInputChange}
+                                        minLength={5}
                                         required
                                     />
 
@@ -612,17 +1132,56 @@ useEffect(() => {
                                         required
                                     />
 
+                                    
+                                                                        
                                     <label htmlFor="service-image">
-                                        Image URL
+                                        Service Image
                                     </label>
+
+                                    {serviceForm.image_url && (
+                                        <div className="admin-image-preview">
+                                            <img
+                                                src={serviceForm.image_url}
+                                                alt={serviceForm.name || 'Service image'}
+                                            />
+                                            <p>Current image</p>
+                                        </div>
+                                    )}
+
+                                    <label htmlFor="service-image" className="admin-image-upload-label">
+                                        {serviceForm.image_url
+                                            ? 'Select a file to change image'
+                                            : 'Select a file to upload image'}
+                                    </label>
+
                                     <input
+                                        ref={serviceImageInputRef}
                                         id="service-image"
-                                        type="text"
-                                        name="image_url"
-                                        value={serviceForm.image_url}
-                                        onChange={handleServiceInputChange}
-                                        placeholder="/images/service-name.jpg"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        onChange={(event) => {
+                                            const file = event.target.files[0] || null;
+
+                                            
+                                            setServiceImageUploadError('');
+
+                                            if (file) {
+                                                handleUploadServiceImage(file);
+                                            }
+                                        }}
                                     />
+
+                                    {isUploadingServiceImage && (
+                                        <p>Uploading image...</p>
+                                    )}
+
+                                    {serviceImageUploadError && (
+                                        <p className="admin-form-error">
+                                            {serviceImageUploadError}
+                                        </p>
+                                    )}
+
+
 
                                     {servicesError && (
                                         <p className="admin-form-error">
@@ -633,7 +1192,7 @@ useEffect(() => {
                                     <button 
                                         type="submit"
                                         className="admin-save-button"
-                                        disabled={isSavingService}
+                                        disabled={isSavingService || isUploadingServiceImage}
                                     >
                                         {isSavingService
                                             ? 'Saving...'
@@ -802,17 +1361,39 @@ useEffect(() => {
                                     />
 
                                     <label htmlFor="staff-image">
-                                        Image URL
+                                        Upload Staff Image
                                     </label>
 
                                     <input
+                                        ref={staffImageInputRef}
                                         id="staff-image"
-                                        type="text"
-                                        name="image_url"
-                                        value={staffForm.image_url}
-                                        onChange={handleStaffInputChange}
-                                        placeholder="/images/staff-name.jpg"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleStaffImageChange}
                                     />
+
+                                    {staffImageUploadError && (
+                                        <p className="admin-form-error">
+                                            {staffImageUploadError}
+                                        </p>
+                                    )}
+
+                                    {isUploadingStaffImage && (
+                                        <p>Uploading staff image...</p>
+                                    )}
+
+
+
+                                    {staffForm.image_url && (
+                                        <div className="admin-image-preview">
+                                            <img
+                                                src={staffForm.image_url}
+                                                alt={staffForm.name || 'Staff image'}
+                                            />
+                                            <p>Current image</p>
+                                        </div>
+                                    )}
+
 
                                     {staffError && (
                                         <p className="admin-form-error">
@@ -926,21 +1507,464 @@ useEffect(() => {
                        
                     
                     
+                    
+                    
                     {/* Manage Images */}
                     {activeSection === 'images' && (
                         <section className="admin-section">
                             <h2>Manage Images</h2>
-                            <p>Manage the images displayed on the website.</p>
+                            <p>Upload and manage the images displayed on the website.</p>
+
+                            {/* Home Page Image */}
+                            <div className="image-management-section">
+                                <h3>Home Page Image</h3>
+                                <p>
+                                    Upload an image to display on the Home page.
+                                </p>
+
+                                <div className="current-image-preview">
+                                    <p>Current Home Page Image:</p>
+                                    <img
+                                        className="current-image-preview-img"
+                                        src="/images/Autumn-Car-roberto-nickson-unsplash - Copy.jpg"
+                                        alt="Current Home page image"
+                                    />
+                                </div>
+
+                                <form
+                                    className="admin-staff-form"
+                                    onSubmit={(event) => handleUploadImage(event, 'home')}
+                                >
+                                    <label htmlFor="home-image-file">
+                                        Select Image
+                                    </label>
+
+                                    <input
+                                        ref={imageFileInputRef}
+                                        id="home-image-file"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        onChange={(event) => {
+                                            setImageFile(event.target.files[0] || null);
+                                            setImageError('');
+                                            setImageSuccess('');
+                                        }}
+                                        required
+                                    />
+
+                                    {imageFile && (
+                                        <p>
+                                            Selected file: {imageFile.name}
+                                        </p>
+                                    )}
+
+                                    <label htmlFor="home-image-alt-text">
+                                        Image Alt Text
+                                    </label>
+
+                                    <input
+                                        id="home-image-alt-text"
+                                        type="text"
+                                        value={imageAltText}
+                                        onChange={(event) => {
+                                            setImageAltText(event.target.value);
+                                            setImageError('');
+                                            setImageSuccess('');
+                                        }}
+                                        placeholder="Describe the image"
+                                        maxLength={255}
+                                        required
+                                    />
+
+                                    {imageError && (
+                                        <p className="admin-form-error">
+                                            {imageError}
+                                        </p>
+                                    )}
+
+                                    {imageSuccess && (
+                                        <p className="admin-form-success">
+                                            {imageSuccess}
+                                        </p>
+                                    )}
+
+                                    <button
+                                        type="submit"
+                                        className="admin-save-button"
+                                        disabled={isUploadingImage}
+                                    >
+                                        {isUploadingImage
+                                            ? 'Uploading...'
+                                            : 'Upload Home Page Image'}
+                                    </button>
+                                </form>
+                            </div>
+
+
+                            {/* About Page Image */}
+                            <div className="image-management-section">
+                                <h3>About Page Image</h3>
+                                <p>
+                                    Upload an image to display on the About page.
+                                </p>
+
+                                <div className="current-image-preview">
+                                    <p>Current About Page Image:</p>
+                                    <img
+                                        className="current-image-preview-img"
+                                        src="/images/car-workshop-tommy-anderson-unsplash.jpg"
+                                        alt="Current About page image"
+                                    />
+                                </div>
+
+                                <form
+                                    className="admin-staff-form"
+                                    onSubmit={(event) => handleUploadImage(event, 'about')}
+                                >
+                                    <label htmlFor="about-image-file">
+                                        Select Image
+                                    </label>
+
+                                    <input
+                                        ref={aboutImageInputRef}
+                                        id="about-image-file"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        onChange={(event) => {
+                                            setImageFile(event.target.files[0] || null);
+                                            setImageError('');
+                                            setImageSuccess('');
+                                        }}
+                                        required
+                                    />
+
+                                    {imageFile && (
+                                        <p>
+                                            Selected file: {imageFile.name}
+                                        </p>
+                                    )}
+
+                                    <label htmlFor="about-image-alt-text">
+                                        Image Alt Text
+                                    </label>
+
+                                    <input
+                                        id="about-image-alt-text"
+                                        type="text"
+                                        value={imageAltText}
+                                        onChange={(event) => {
+                                            setImageAltText(event.target.value);
+                                            setImageError('');
+                                            setImageSuccess('');
+                                        }}
+                                        placeholder="Describe the image"
+                                        maxLength={255}
+                                        required
+                                    />
+
+                                    {imageError && (
+                                        <p className="admin-form-error">
+                                            {imageError}
+                                        </p>
+                                    )}
+
+                                    {imageSuccess && (
+                                        <p className="admin-form-success">
+                                            {imageSuccess}
+                                        </p>
+                                    )}
+
+                                    <button
+                                        type="submit"
+                                        className="admin-save-button"
+                                        disabled={isUploadingImage}
+                                    >
+                                        {isUploadingImage
+                                            ? 'Uploading...'
+                                            : 'Upload About Page Image'}
+                                    </button>
+                                </form>
+                            </div>
+
+
+                            {/* Image Library */}
+                            <div className="image-management-section" 
+                                ref={imageLibraryRef}
+                            >
+                                 
+                                <h3>Image Library</h3>
+                                <p>
+                                    View the images currently stored on the website.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    className="admin-save-button"
+                                    onClick={fetchImages}
+                                    disabled={imagesLoading}
+                                >
+                                    {imagesLoading ? 'Loading Images...' : 'Load Image Library'}
+                                </button>
+
+                                <form
+                                    className="admin-staff-form"
+                                    onSubmit={(event) => handleUploadImage(event, 'gallery')}
+                                    >
+                                    <label htmlFor="gallery-image-file">
+                                        Select Image
+                                    </label>
+
+                                    <input
+                                        ref={galleryImageInputRef}
+                                        id="gallery-image-file"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        onChange={(event) => {
+                                        setImageFile(event.target.files[0] || null);
+                                        setImageError('');
+                                        setImageSuccess('');
+                                        }}
+                                        required
+                                    />
+
+                                    {imageFile && (
+                                        <p>Selected file: {imageFile.name}</p>
+                                    )}
+
+                                    <label htmlFor="gallery-image-alt-text">
+                                        Image Alt Text
+                                    </label>
+
+                                    <input
+                                        id="gallery-image-alt-text"
+                                        type="text"
+                                        value={imageAltText}
+                                        onChange={(event) => {
+                                        setImageAltText(event.target.value);
+                                        setImageError('');
+                                        setImageSuccess('');
+                                        }}
+                                        placeholder="Describe the image"
+                                        maxLength={255}
+                                        required
+                                    />
+
+                                    {imageError && (
+                                        <p className="admin-form-error">{imageError}</p>
+                                    )}
+
+                                    {imageSuccess && (
+                                        <p className="admin-form-success">{imageSuccess}</p>
+                                    )}
+
+                                    <button
+                                        type="submit"
+                                        className="admin-save-button"
+                                        disabled={isUploadingImage}
+                                    >
+                                        {isUploadingImage ? 'Uploading...' : 'Upload to Image Library'}
+                                    </button>
+                                </form>
+
+                                {imagesLoadError && (
+                                    <p className="admin-form-error">
+                                        {imagesLoadError}
+                                    </p>
+                                )}
+
+                                {imageDeleteError && (
+                                    <p 
+                                        className="admin-form-error"
+                                        ref={imageDeleteErrorRef}
+                                    >
+                                        {imageDeleteError}
+                                    </p>
+                                )}
+
+                                {imageDeleteSuccess && (
+                                    <p className="admin-form-success">
+                                        {imageDeleteSuccess}
+                                    </p>
+                                )}
+
+                                {imagesLoading && (
+                                    <p>Loading images...</p>
+                                )}
+
+                                {!imagesLoading && imageList.length > 0 && (
+                                    <div className="admin-staff-grid">
+                                        {imageList.map((image) => (
+                                            <div
+                                                className="admin-staff-card"
+                                                key={image.id}
+                                            >
+                                                <img
+                                                    src={image.image_url}
+                                                    alt={image.alt_text}
+                                                />
+
+                                                <div className="admin-staff-card-content">
+                                                    <h4>{image.filename}</h4>
+
+                                                    <p>
+                                                        Type: {image.image_type || 'Gallery'}
+                                                    </p>
+
+                                                    <p>{image.alt_text}</p>
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    className="admin-delete-button"
+                                                    onClick={() => handleDeleteImage(image)}
+                                                >
+                                                    Delete Image
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {!imagesLoading && imageList.length === 0 && (
+                                    <p>No images loaded yet. Select "Load Image Library" to view them.</p>
+                                )}
+                            </div>
                         </section>
                     )}
+
+
+
+
+
+                    
                     
                     {/* Manage Users */}
                     {activeSection === 'users' && (
                         <section className="admin-section">
-                            <h2>Manage Customers</h2>
-                            <p>Manage customer accounts.</p>
+                            <h2>Manage Users</h2>
+
+
+                            {editingUserId !== null && (
+                                
+                                <form
+                                    className="user-edit-form"
+                                    onSubmit={handleSaveUser}
+                                >
+                                    <h3>Edit User</h3>
+
+                                    <label>
+                                        Name
+                                        <input
+                                            type="text"
+                                            value={userForm.name}
+                                            onChange={(event) =>
+                                                setUserForm({
+                                                    ...userForm,
+                                                    name: event.target.value
+                                                })
+                                            }
+                                        />
+                                    </label>
+
+                                    <label>
+                                        Email
+                                        <input
+                                            type="email"
+                                            value={userForm.email}
+                                            onChange={(event) =>
+                                                setUserForm({
+                                                    ...userForm,
+                                                    email: event.target.value
+                                                })
+                                            }
+                                        />
+                                    </label>
+
+                                    <label>
+                                        Role
+                                        <select
+                                            value={userForm.role}
+                                            onChange={(event) =>
+                                                setUserForm({
+                                                    ...userForm,
+                                                    role: event.target.value
+                                                })
+                                            }
+                                        >
+                                            <option value="customer">Customer</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </label>
+
+                                    <button type="submit">
+                                        Save Changes
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setEditingUserId(null)}
+                                    >
+                                        Cancel
+                                    </button>
+                                </form>
+                            )}
+
+
+                            {usersLoading && <p>Loading users...</p>}
+
+                            {usersError && (
+                                <p className="error-message">{usersError}</p>
+                            )}
+
+                            {!usersLoading && !usersError && userList.length === 0 && (
+                                <p>No users found.</p>
+                            )}
+
+                            {!usersLoading && !usersError && userList.length > 0 && (
+                                <div className="admin-table-container">
+                                    <table className="admin-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {userList.map((user) => (
+                                                <tr key={user.id}>
+                                                    <td>{user.name}</td>
+                                                    <td>{user.email}</td>
+                                                    <td>{user.role}</td>
+                                                    <td>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleEditUser(user)}
+                                                        >
+                                                            Edit
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleDeleteUser(user)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </section>
                     )}
+
+
+
+
                     
                     {/* My Profile */}
                     {activeSection === 'profile' && (

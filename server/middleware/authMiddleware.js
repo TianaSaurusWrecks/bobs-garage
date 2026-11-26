@@ -11,7 +11,7 @@ function authenticateToken(req, res, next) {
     // check whether a token was provided
     if (!token) {
         return res.status(401).json({
-            message: "Authentication required."
+            message: "Authentication required. Please log in."
         });
     }
 

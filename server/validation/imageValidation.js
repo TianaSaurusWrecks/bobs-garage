@@ -14,7 +14,12 @@ const imageSchema = Joi.object({
 
     staff_id: Joi.number().integer().positive().allow(null).optional(),
 
-    user_id: Joi.number().integer().positive().allow(null).optional()
+    user_id: Joi.number().integer().positive().allow(null).optional(),
+
+    image_type: Joi.string()
+        .valid("home", "about", "gallery")
+        .allow(null)
+        .optional()
 });
 
 module.exports = { imageSchema };
