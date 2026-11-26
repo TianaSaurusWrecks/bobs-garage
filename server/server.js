@@ -1,6 +1,15 @@
+
+
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+dotenv.config({ path: ".env.local" });
+
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+
 const db = require("./config/db"); 
 const cookieParser = require("cookie-parser");
 
@@ -20,7 +29,6 @@ const preferenceRoutes = require("./routes/preferenceRoutes");
 const userRoutes = require("./routes/userRoutes");
 const favouriteRoutes = require("./routes/favouriteRoutes");
 
-require("dotenv").config();
 
 const app = express();
 

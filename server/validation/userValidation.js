@@ -50,8 +50,28 @@ const updateProfileSchema = Joi.object({
         .required()
 });
 
+// Validation rules for an admin updating a user
+const updateUserByAdminSchema = Joi.object({
+    name: Joi.string()
+        .trim()
+        .min(2)
+        .max(100)
+        .required(),
+
+    email: Joi.string()
+        .trim()
+        .email()
+        .max(255)
+        .required(),
+
+    role: Joi.string()
+        .valid("customer", "admin")
+        .required()
+});
+
 module.exports = {
     registerSchema, // checks registration information
     loginSchema,     // checks login information
-    updateProfileSchema // checks update profile
+    updateProfileSchema, // checks update profile
+    updateUserByAdminSchema
 };

@@ -14,7 +14,8 @@ const requireAdmin = require("../middleware/adminMiddleware");
 const {
     registerSchema,
     loginSchema,
-    updateProfileSchema
+    updateProfileSchema,
+    updateUserByAdminSchema
 } = require("../validation/userValidation");
 
 // POST - Register a new customer
@@ -301,9 +302,75 @@ router.get("/:id", authenticateToken, requireAdmin, async (req, res) => {
     }
 });
 
+
+ // PUT - update a user's details and role (ADMIN ONLY)
+router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { error } = updateUserByAdminSchema.validate(req.body);
+
+        if (error) {
+            return res.status(400).json({
+                message: error.details[0].message
+            });
+        }
+
+        const { name, email, role } = req.body;
+
+        if (
+            String(req.user.userId) === String(req.params.id) &&
+            role !== "admin"
+        ) {
+            return res.status(403).json({
+                message: "You cannot remove your own admin role."
+            });
+        }
+
+        const result = await userModel.updateUserByAdmin(
+            req.params.id,
+            name,
+            email,
+            role
+        );
+
+        if (result === 0) {
+            return res.status(404).json({
+                message: "User not found."
+            });
+        }
+
+        res.json({
+            message: "User updated successfully!"
+        });
+
+    } catch (error) {
+        console.error("Error updating user:", error);
+
+        if (error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                message: "Email address is already in use."
+            });
+        }
+
+        res.status(500).json({
+            message: "Unable to update user."
+        });
+    }
+});
+
+
+
+
 // DELETE - remove a user account (ADMIN ONLY)
 router.delete("/:id", authenticateToken, requireAdmin, async (req, res) => {
     try {
+
+        if (String(req.user.userId) === String(req.params.id)) {
+            return res.status(403).json({
+                message: "You cannot delete your own account."
+            });
+        }
+
+
         const result = await userModel.deleteUser(req.params.id);
 
         if (result.affectedRows === 0) {
