@@ -1430,7 +1430,7 @@ body {
 
 .favourite-button {
   display: block;
-  margin: 10px auto o;
+  margin: 10px auto 0;
   padding: 6px;
   border: none;
   background: transparent;
@@ -1491,7 +1491,7 @@ body {
   isolation: isolate;
   
   background-image: url('/images/Car-Road-erik-mclean-unsplash.jpg');
-  background-image: border solid 2px rgb(216, 162, 62);
+  
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

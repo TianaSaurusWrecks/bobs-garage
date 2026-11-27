@@ -73,6 +73,7 @@ function Services() {
     // add or remove a service from faves
     async function toggleFavourite(service) {
         if (!user) {
+            window.alert('Please log in to add services to your favourites.');
             navigate('/login');
             return;
         }
